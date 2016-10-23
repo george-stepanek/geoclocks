@@ -70,7 +70,7 @@ $(document).ready(function() {
     }
   }
   
-  $('#city')/*.focus()*/.keypress(function (e) {
+  $('#city').focus().keypress(function (e) {
     if(e.keyCode == 13) { 
       $('#find').click(); 
     }
