@@ -52,3 +52,6 @@ body {
   transform: translate(-50%, 0);
   opacity: 0.4;
 }
+_:-ms-lang(x), #title { /* IE & Edge */
+    z-index: 1 !important;
+}
