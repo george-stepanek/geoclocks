@@ -19,9 +19,10 @@ body {
 #time {
   position: absolute;
   top: 12px;
+  right: 12px;
+  height: 20px;
   color: dimgrey;
   padding: 2px;
-  right: 12px;
   cursor: pointer;
   background: white;
   z-index: 1;
