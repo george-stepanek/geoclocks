@@ -65,7 +65,7 @@ $(document).ready(function() {
     var cities = $.cookie("city").split(';');
     for(i = 0; i < cities.length; i++) {
       if(cities[i].length > 0) { 
-        showTime(map, cities[i]); 
+        showTime(map, cities[i], false); 
       }
     }
   }
@@ -82,7 +82,7 @@ $(document).ready(function() {
     });
     
     if(!$.cookie("city") || !$.cookie("city").includes(city)) {
-      showTime(map, city); 
+      showTime(map, city, true); 
       var previous = $.cookie("city") ? $.cookie("city") + ";" : "";
       $.cookie("city", previous + city, { expires: 730 });
     }
@@ -91,13 +91,18 @@ $(document).ready(function() {
   }); 
 });
 
-function showTime(map, city) {
+function showTime(map, city, save) {
   var key = "key=AIzaSyDWtKaxE0vsWdq9lPwCqbuBb3R4S0KyV-U";
   var url = "https://maps.googleapis.com/maps/api/geocode/json?" + 
       key + "&address=" + city;
 
-  $.get(url, function (pos) {
-    var position = pos.results[0].geometry.location;
+  $.get(url, function (geocode) {
+    if(geocode.results.length == 0 && save) {
+      alert('Sorry, "' + city + '" cannot be found.');
+      return;
+    }
+    
+    var position = geocode.results[0].geometry.location;
     url = "https://maps.googleapis.com/maps/api/timezone/json?" + 
       key + "&location=" + position.lat + "," + position.lng + 
       "&timestamp=" + Math.floor(Date.now() / 1000);
