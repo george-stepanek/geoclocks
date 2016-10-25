@@ -99,6 +99,8 @@ function showTime(map, city, save) {
   $.get(url, function (geocode) {
     if(geocode.results.length == 0) {
       if(save) { 
+        var list = $.cookie("city").replace(city, '');
+        $.cookie("city", list.replace(';;', ';'), { expires: 730 });
         alert('Sorry, "' + city + '" cannot be found.');
       }
       return;
@@ -121,9 +123,8 @@ function showTime(map, city, save) {
       
       google.maps.event.addListener(info, 'closeclick', function() {
         var gone = this.content.split('(')[0].trim();
-        var remaining = $.cookie("city").replace(gone, '');
-        remaining = remaining.replace(';;', ';'); 
-        $.cookie("city", remaining, { expires: 730 });
+        var list = $.cookie("city").replace(gone, '');
+        $.cookie("city", list.replace(';;', ';'), { expires: 730 });
         
         for(i = 0; i < infos.length; i++) {
           if(infos[i] == info) { 
