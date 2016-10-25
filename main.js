@@ -77,7 +77,7 @@ $(document).ready(function() {
   });
 
   $('#find').on('click', function () {
-    var acronyms = ['UK', 'GB', 'US', 'USA', 'PNG', 'UAE'];
+    var acronyms = ['UK', 'GB', 'US', 'USA', 'PNG', 'UAE', 'NZ'];
     var city = $('#city').val().replace(/\w\S*/g, function(t) {
       if(acronyms.indexOf(t.toUpperCase()) > -1) {
          return t.toUpperCase();
