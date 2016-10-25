@@ -77,8 +77,14 @@ $(document).ready(function() {
   });
 
   $('#find').on('click', function () {
+    var acronyms = ['UK', 'GB', 'US', 'USA', 'PNG', 'UAE'];
     var city = $('#city').val().replace(/\w\S*/g, function(t) {
-        return t[0].toUpperCase() + t.substr(1).toLowerCase(); 
+      if(acronyms.indexOf(t.toUpperCase()) > -1) {
+         return t.toUpperCase();
+      }
+      else {
+        return t[0].toUpperCase() + t.substr(1).toLowerCase();
+      }
     });
     
     if(!$.cookie("city") || !$.cookie("city").includes(city)) {
