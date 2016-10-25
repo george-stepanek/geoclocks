@@ -97,8 +97,10 @@ function showTime(map, city, save) {
       key + "&address=" + city;
 
   $.get(url, function (geocode) {
-    if(geocode.results.length == 0 && save) {
-      alert('Sorry, "' + city + '" cannot be found.');
+    if(geocode.results.length == 0) {
+      if(save) { 
+        alert('Sorry, "' + city + '" cannot be found.');
+      }
       return;
     }
     
