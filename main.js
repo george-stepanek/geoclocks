@@ -91,7 +91,7 @@ $(document).ready(function() {
   }); 
 });
 
-function showTime(map, city, save) {
+function showTime(map, city, isBeingAdded) {
   var key = "key=AIzaSyDWtKaxE0vsWdq9lPwCqbuBb3R4S0KyV-U";
   var url = "https://maps.googleapis.com/maps/api/geocode/json?" + 
       key + "&address=" + city;
@@ -100,7 +100,7 @@ function showTime(map, city, save) {
     if(geocode.results.length == 0) {
       var list = $.cookie("city").replace(city, '');
       $.cookie("city", list.replace(';;', ';'), { expires: 730 });
-      if(save) { 
+      if(isBeingAdded) { 
         alert('Sorry, "' + city + '" cannot be found.');
       }
       return;
