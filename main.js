@@ -2,11 +2,9 @@ var hour;
 var infos = [];
 
 $(document).ready(function() {
-  $("#map").height(window.innerHeight - 17);
-
   var map = new google.maps.Map($('#map')[0], { 
     zoom: 2, 
-    center: {lat: 10, lng: -45}, 
+    center: {lat: 30, lng: -45}, 
     mapTypeControl: false,
     streetViewControl: false 
   });
@@ -22,10 +20,7 @@ $(document).ready(function() {
   }
   
   $("#menu").menu().hide();
-  if(window.innerHeight < 653) {
-    $(".ui-menu").height(window.innerHeight - 48);
-    $(".ui-menu").css("overflow-y", "scroll");
-  }
+  resize();
   
   $("#time").on('click', function () { 
     $("#menu").toggle(); 
@@ -95,7 +90,23 @@ $(document).ready(function() {
     
     $('#city').val('');
   }); 
+
+  $( window ).resize(function() { 
+    resize(); 
+  });
 });
+
+function resize() {
+  $("#map").height(window.innerHeight - 17);
+  if(window.innerHeight < 653) {
+    $(".ui-menu").height(window.innerHeight - 48);
+    $(".ui-menu").css("overflow-y", "scroll");
+  }
+  else {
+    $(".ui-menu").css('height', 'auto');
+    $(".ui-menu").css("overflow-y", "auto");    
+  }
+}
 
 function showTime(map, city, isBeingAdded) {
   var key = "key=AIzaSyDWtKaxE0vsWdq9lPwCqbuBb3R4S0KyV-U";
