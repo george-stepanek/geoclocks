@@ -98,9 +98,9 @@ function showTime(map, city, save) {
 
   $.get(url, function (geocode) {
     if(geocode.results.length == 0) {
+      var list = $.cookie("city").replace(city, '');
+      $.cookie("city", list.replace(';;', ';'), { expires: 730 });
       if(save) { 
-        var list = $.cookie("city").replace(city, '');
-        $.cookie("city", list.replace(';;', ';'), { expires: 730 });
         alert('Sorry, "' + city + '" cannot be found.');
       }
       return;
