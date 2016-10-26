@@ -38,6 +38,9 @@ $(document).ready(function() {
     if(hour || hour == 0) {
       now.setHours(hour, 0, 0, 0);
     }
+    else if (now.getSeconds() == 0 && now.getMilliseconds() < 200) {
+      refreshTimezones(map);
+    }
     
     $('#time').text(("0" + now.getHours()).slice(-2) + ':' +
       ("0" + now.getMinutes()).slice(-2) + ":" +
