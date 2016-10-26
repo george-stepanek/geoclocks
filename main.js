@@ -15,12 +15,12 @@ $(document).ready(function() {
   });
   
   for(var i = 0; i < 24; i++) {
-    $("#menu").append("<li><div>" + 
-      ("0" + i).slice(-2) + ":00</div></li>")
+    var hours = ("0" + i).slice(-2);
+    $("#menu").append("<li><div>" + hours + ":00</div></li>");
   }
   
   $("#menu").menu().hide();
-  resize();
+  resizeWindow();
   
   $("#time").on('click', function () { 
     $("#menu").toggle(); 
@@ -30,6 +30,7 @@ $(document).ready(function() {
   });
   $(".ui-menu-item").on('click', function (e) { 
     hour = parseFloat(this.innerHTML.split('>')[1].slice(0, 2));
+    refreshTimezones(map);
   });
 
   setInterval(function() {
@@ -43,24 +44,15 @@ $(document).ready(function() {
       ("0" + now.getSeconds()).slice(-2) + " ▼");
     
     for(i = 0; i < infos.length; i++) {
-      var content = infos[i].content;
-      var offset = parseFloat(content.split('(')[1].split(')')[0]);
-      var utc = now.getTime() + (now.getTimezoneOffset() * 60000);
-      var local = new Date(utc + offset * 3600000);
-      
-      infos[i].setContent(content.split('<b>')[0] + '<b>' + 
-        ("0" + local.getHours()).slice(-2) + ':' +
-        ("0" + local.getMinutes()).slice(-2) + ":" +
-        ("0" + local.getSeconds()).slice(-2) + ' ' +
-        local.toString().slice(0, 3) + '</b>');
+      refreshTime(now, infos[i]);
     }
-  }, 500);
+  }, 200);
   
   if($.cookie("city")) {
     var cities = $.cookie("city").split(';');
     for(i = 0; i < cities.length; i++) {
       if(cities[i].length > 0) { 
-        showTime(map, cities[i], false); 
+        showTime(map, cities[i], false, addToMap); 
       }
     }
   }
@@ -83,7 +75,7 @@ $(document).ready(function() {
     });
     
     if(!$.cookie("city") || !$.cookie("city").includes(city)) {
-      showTime(map, city, true); 
+      showTime(map, city, true, addToMap); 
       var previous = $.cookie("city") ? $.cookie("city") + ";" : "";
       $.cookie("city", previous + city, { expires: 730 });
     }
@@ -92,11 +84,24 @@ $(document).ready(function() {
   }); 
 
   $( window ).resize(function() { 
-    resize(); 
+    resizeWindow(); 
   });
 });
 
-function resize() {
+function refreshTime(now, info) {
+  var content = info.content;
+  var offset = parseFloat(content.split('(')[1].split(')')[0]);
+  var utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+  var local = new Date(utc + offset * 3600000);
+
+  info.setContent(content.split('<b>')[0] + '<b>' + 
+    ("0" + local.getHours()).slice(-2) + ':' +
+    ("0" + local.getMinutes()).slice(-2) + ":" +
+    ("0" + local.getSeconds()).slice(-2) + ' ' +
+    local.toString().slice(0, 3) + '</b>'); 
+}
+
+function resizeWindow() {
   $("#map").height(window.innerHeight - 17);
   if(window.innerHeight < 653) {
     $(".ui-menu").height(window.innerHeight - 48);
@@ -108,7 +113,41 @@ function resize() {
   }
 }
 
-function showTime(map, city, isBeingAdded) {
+function refreshTimezones(map) {
+  for(i = 0; i < infos.length; i++) {
+    var city = infos[i].content.split('(')[0].trim();
+    showTime(map, city, false, updateMap, infos[i]);
+  }  
+}
+
+function updateMap(map, position, city, zone, info, now) {
+  info.setContent(city + " (" + zone + ")<br/><b>&nbsp;</b>");
+  refreshTime(now, info);
+}
+
+function addToMap(map, position, city, zone, info, now) {
+  var info = new google.maps.InfoWindow({
+    map: map, 
+    position: position,
+    content: city + " (" + zone + ")<br/><b>&nbsp;</b>"
+  });
+  infos.push(info);
+
+  google.maps.event.addListener(info, 'closeclick', function() {
+    var gone = this.content.split('(')[0].trim();
+    var rest = $.cookie("city").replace(gone, '').replace(';;', ';');
+    $.cookie("city", rest, { expires: 730 });
+
+    for(i = 0; i < infos.length; i++) {
+      if(infos[i] == info) { 
+        infos.splice(i, 1);
+        break;
+      }
+    }
+  });  
+}
+
+function showTime(map, city, isBeingAdded, callback, info) {
   var key = "key=AIzaSyDWtKaxE0vsWdq9lPwCqbuBb3R4S0KyV-U";
   var url = "https://maps.googleapis.com/maps/api/geocode/json?" + 
       key + "&address=" + city;
@@ -123,33 +162,20 @@ function showTime(map, city, isBeingAdded) {
       return;
     }
     
+    var now = new Date();
+    if(hour || hour == 0) {
+      now.setHours(hour, 0, 0, 0);
+    }
+
     var position = geocode.results[0].geometry.location;
     url = "https://maps.googleapis.com/maps/api/timezone/json?" + 
       key + "&location=" + position.lat + "," + position.lng + 
-      "&timestamp=" + Math.floor(Date.now() / 1000);
+      "&timestamp=" + Math.floor(now / 1000);
 
     $.get(url, function (result) {
       var offset = result.rawOffset + result.dstOffset;
       var zone = (offset > 0 ? '+' : '') + offset / 3600;
-      var info = new google.maps.InfoWindow({
-        map: map, 
-        position: position,
-        content: city + " (" + zone + ")<br/><b>&nbsp;</b>"
-      });
-      infos.push(info);
-      
-      google.maps.event.addListener(info, 'closeclick', function() {
-        var gone = this.content.split('(')[0].trim();
-        var list = $.cookie("city").replace(gone, '');
-        $.cookie("city", list.replace(';;', ';'), { expires: 730 });
-        
-        for(i = 0; i < infos.length; i++) {
-          if(infos[i] == info) { 
-            infos.splice(i, 1);
-            break;
-          }
-        }
-      });
+      callback(map, position, city, zone, info, now);
     }); 
   });
 }
