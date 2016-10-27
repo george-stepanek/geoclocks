@@ -1,7 +1,7 @@
-var hour;
-var infos = [];
+var hour, infos = [];
 
 $(document).ready(function() {
+  // Initialise the map to focus on North America and Western Europe
   var map = new google.maps.Map($('#map')[0], { 
     zoom: 2, 
     center: {lat: 30, lng: -45}, 
@@ -9,19 +9,20 @@ $(document).ready(function() {
     streetViewControl: false 
   });
   
+  // Initialse the night shadow overlay
   new DayNightOverlay({ 
     map: map,
     fillColor: 'rgba(0, 0, 0, 0.2)',
   });
   
+  // Initialise the menu
   for(var i = 0; i < 24; i++) {
     var hours = ("0" + i).slice(-2);
     $("#menu").append("<li><div>" + hours + ":00</div></li>");
-  }
-  
+  }  
   $("#menu").menu().hide();
-  resizeWindow();
   
+  // Menu show/hide and select handlers
   $("#time").on('click', function () { 
     $("#menu").toggle(); 
   });
@@ -33,24 +34,12 @@ $(document).ready(function() {
     refreshTimezones(map);
   });
 
+  // Keep all clocks updated with the current time
   setInterval(function() {
-    var now = new Date();
-    if(hour || hour == 0) {
-      now.setHours(hour, 0, 0, 0);
-    }
-    else if (now.getSeconds() == 0 && now.getMilliseconds() < 200) {
-      refreshTimezones(map);
-    }
-    
-    $('#time').text(("0" + now.getHours()).slice(-2) + ':' +
-      ("0" + now.getMinutes()).slice(-2) + ":" +
-      ("0" + now.getSeconds()).slice(-2) + " ▼");
-    
-    for(i = 0; i < infos.length; i++) {
-      refreshTime(now, infos[i]);
-    }
+    clockTick(map);
   }, 200);
   
+  // Load the previously selected locations from the cookie
   if($.cookie("city")) {
     var cities = $.cookie("city").split(';');
     for(i = 0; i < cities.length; i++) {
@@ -59,37 +48,52 @@ $(document).ready(function() {
       }
     }
   }
-  
+
+  // The enter key can be used to submit requests
   $('#city').focus().keypress(function (e) {
     if(e.keyCode == 13) { 
       $('#find').click(); 
     }
   });
 
+  // Search button handler
   $('#find').on('click', function () {
-    var acronyms = ['UK', 'GB', 'US', 'USA', 'PNG', 'UAE', 'NZ'];
-    var city = $('#city').val().replace(/\w\S*/g, function(t) {
-      if(acronyms.indexOf(t.toUpperCase()) > -1) {
-         return t.toUpperCase();
-      }
-      else {
-        return t[0].toUpperCase() + t.substr(1).toLowerCase();
-      }
-    });
-    
-    if(!$.cookie("city") || !$.cookie("city").includes(city)) {
-      showTime(map, city, true, addToMap); 
-      var previous = $.cookie("city") ? $.cookie("city") + ";" : "";
-      $.cookie("city", previous + city, { expires: 730 });
-    }
-    
+    findCity(map);    
     $('#city').val('');
   }); 
 
+  // Keep the map and menu size in sync with the window size
+  resizeWindow();
   $( window ).resize(function() { 
     resizeWindow(); 
   });
 });
+
+function refreshTimezones(map) {
+  for(i = 0; i < infos.length; i++) {
+    var city = infos[i].content.split('(')[0].trim();
+    showTime(map, city, false, updateMap, infos[i]);
+  }  
+}
+
+function clockTick (map) {
+  var now = new Date();
+  if(hour || hour == 0) {
+    now.setHours(hour, 0, 0, 0);
+  }
+  else if (now.getMinutes() == 0 && now.getSeconds() == 0 && 
+           now.getMilliseconds() < 200) {
+    refreshTimezones(map);
+  }
+
+  $('#time').text(("0" + now.getHours()).slice(-2) + ':' +
+                  ("0" + now.getMinutes()).slice(-2) + ":" +
+                  ("0" + now.getSeconds()).slice(-2) + " ▼");
+
+  for(i = 0; i < infos.length; i++) {
+    refreshTime(now, infos[i]);
+  }  
+}
 
 function refreshTime(now, info) {
   var content = info.content;
@@ -98,29 +102,10 @@ function refreshTime(now, info) {
   var local = new Date(utc + offset * 3600000);
 
   info.setContent(content.split('<b>')[0] + '<b>' + 
-    ("0" + local.getHours()).slice(-2) + ':' +
-    ("0" + local.getMinutes()).slice(-2) + ":" +
-    ("0" + local.getSeconds()).slice(-2) + ' ' +
-    local.toString().slice(0, 3) + '</b>'); 
-}
-
-function resizeWindow() {
-  $("#map").height(window.innerHeight - 17);
-  if(window.innerHeight < 653) {
-    $(".ui-menu").height(window.innerHeight - 48);
-    $(".ui-menu").css("overflow-y", "scroll");
-  }
-  else {
-    $(".ui-menu").css('height', 'auto');
-    $(".ui-menu").css("overflow-y", "auto");    
-  }
-}
-
-function refreshTimezones(map) {
-  for(i = 0; i < infos.length; i++) {
-    var city = infos[i].content.split('(')[0].trim();
-    showTime(map, city, false, updateMap, infos[i]);
-  }  
+                  ("0" + local.getHours()).slice(-2) + ':' +
+                  ("0" + local.getMinutes()).slice(-2) + ":" +
+                  ("0" + local.getSeconds()).slice(-2) + ' ' +
+                  local.toString().slice(0, 3) + '</b>'); 
 }
 
 function updateMap(map, position, city, zone, info, now) {
@@ -181,4 +166,34 @@ function showTime(map, city, isBeingAdded, callback, info) {
       callback(map, position, city, zone, info, now);
     }); 
   });
+}
+
+function findCity (map) {
+  var acronyms = ['UK', 'GB', 'US', 'USA', 'PNG', 'UAE', 'NZ'];
+  var city = $('#city').val().replace(/\w\S*/g, function(t) {
+    if(acronyms.indexOf(t.toUpperCase()) > -1) {
+      return t.toUpperCase();
+    }
+    else {
+      return t[0].toUpperCase() + t.substr(1).toLowerCase();
+    }
+  });
+
+  if(!$.cookie("city") || !$.cookie("city").includes(city)) {
+    showTime(map, city, true, addToMap); 
+    var previous = $.cookie("city") ? $.cookie("city") + ";" : "";
+    $.cookie("city", previous + city, { expires: 730 });
+  }
+}
+
+function resizeWindow() {
+  $("#map").height(window.innerHeight - 17);
+  if(window.innerHeight < 653) {
+    $(".ui-menu").height(window.innerHeight - 48);
+    $(".ui-menu").css("overflow-y", "scroll");
+  }
+  else {
+    $(".ui-menu").css('height', 'auto');
+    $(".ui-menu").css("overflow-y", "auto");    
+  }
 }
