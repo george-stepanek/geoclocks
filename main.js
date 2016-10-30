@@ -1,64 +1,74 @@
-var hour, infos = [];
+var map, hour, infos = [];
 
-$(document).ready(function() {
+$(document).ready(function () {
   // Initialise the map to focus on North America and Western Europe
-  var map = new google.maps.Map($('#map')[0], { 
+  map = new google.maps.Map($('#map')[0], { 
     zoom: 2, 
     center: {lat: 30, lng: -45}, 
     mapTypeControl: false,
     streetViewControl: false 
   });
   
-  // Initialse the night shadow overlay
-  new DayNightOverlay({ 
+  // Initialise the night shadow overlay
+  var overlay = new DayNightOverlay({ 
     map: map,
     fillColor: 'rgba(0, 0, 0, 0.2)',
   });
   
   // Initialise the menu
-  for(var i = 0; i < 24; i++) {
+  for (var i = 0; i < 24; i++) {
     var hours = ("0" + i).slice(-2);
     $("#menu").append("<li><div>" + hours + ":00</div></li>");
   }  
   $("#menu").menu().hide();
   
-  // Menu show/hide and select handlers
+  // Menu show/hide and click handlers
   $("#time").on('click', function () { 
-    $("#menu").toggle(); 
+    $("#menu").show(); 
   });
-  $("#city, #find, #map, .ui-menu-item").on('click', function () { 
+  $("input, #find, #map, .ui-menu-item").on('click', function () { 
     $("#menu").hide(); 
   });
   $(".ui-menu-item").on('click', function (e) { 
     hour = parseFloat(this.innerHTML.split('>')[1].slice(0, 2));
-    refreshTimezones(map);
+    refreshTimezones();
+  });
+  
+  // Initialise the date picker
+  $("#date").val($.datepicker.formatDate("dd M ▼", new Date()));
+  $("#date").datepicker({ 
+    dateFormat: "dd M ▼",
+    onSelect: function () { refreshTimezones(); }
   });
 
   // Keep all clocks updated with the current time
-  setInterval(function() {
-    clockTick(map);
+  setInterval(function () {
+    clockTick(overlay);
   }, 200);
   
   // Load the previously selected locations from the cookie
-  if($.cookie("city")) {
+  if ($.cookie("city")) {
     var cities = $.cookie("city").split(';');
-    for(i = 0; i < cities.length; i++) {
-      if(cities[i].length > 0) { 
-        showTime(map, cities[i], false, addToMap); 
+    for (i = 0; i < cities.length; i++) {
+      if (cities[i].length > 0) { 
+        showTime(cities[i], false, addToMap); 
       }
     }
   }
 
-  // The enter key can be used to submit requests
-  $('#city').focus().keypress(function (e) {
-    if(e.keyCode == 13) { 
+  // The enter key can be used to submit requests, esc to clear
+  $('#city')/*.focus()*/.keyup(function (e) {
+    if (e.keyCode == 13) { 
       $('#find').click(); 
+    }
+    if (e.keyCode == 27) { 
+      $('#city').val(''); 
     }
   });
 
   // Search button handler
   $('#find').on('click', function () {
-    findCity(map);    
+    findCity();    
     $('#city').val('');
   }); 
 
@@ -69,33 +79,43 @@ $(document).ready(function() {
   });
 });
 
-function refreshTimezones(map) {
-  for(i = 0; i < infos.length; i++) {
+function refreshTimezones () {
+  for (i = 0; i < infos.length; i++) {
     var city = infos[i].content.split('(')[0].trim();
-    showTime(map, city, false, updateMap, infos[i]);
+    showTime(city, false, updateMap, infos[i]);
   }  
 }
 
-function clockTick (map) {
-  var now = new Date();
-  if(hour || hour == 0) {
-    now.setHours(hour, 0, 0, 0);
+function clockTick (overlay) {
+  var now = getDateTime();
+  if (hour == undefined && now.getMinutes() == 0 && 
+      now.getSeconds() == 0 && now.getMilliseconds() < 200) {
+    refreshTimezones();
   }
-  else if (now.getMinutes() == 0 && now.getSeconds() == 0 && 
-           now.getMilliseconds() < 200) {
-    refreshTimezones(map);
-  }
+  overlay.setDate(now);
 
   $('#time').text(("0" + now.getHours()).slice(-2) + ':' +
                   ("0" + now.getMinutes()).slice(-2) + ":" +
                   ("0" + now.getSeconds()).slice(-2) + " ▼");
 
-  for(i = 0; i < infos.length; i++) {
+  for (i = 0; i < infos.length; i++) {
     refreshTime(now, infos[i]);
   }  
 }
 
-function refreshTime(now, info) {
+function getDateTime () {
+  var now = new Date();
+  var d = new Date($('#date').val().slice(0, 7) + now.getFullYear());
+  if (d.getDate() != now.getDate() || d.getMonth() != now.getMonth()) {
+    now = d;
+  }
+  if (hour || hour == 0) {
+    now.setHours(hour, 0, 0, 0);
+  }
+  return now;
+}
+
+function refreshTime (now, info) {
   var content = info.content;
   var offset = parseFloat(content.split('(')[1].split(')')[0]);
   var utc = now.getTime() + (now.getTimezoneOffset() * 60000);
@@ -108,12 +128,12 @@ function refreshTime(now, info) {
                   local.toString().slice(0, 3) + '</b>'); 
 }
 
-function updateMap(map, position, city, zone, info, now) {
+function updateMap (position, city, zone, info, now) {
   info.setContent(city + " (" + zone + ")<br/><b>&nbsp;</b>");
   refreshTime(now, info);
 }
 
-function addToMap(map, position, city, zone, info, now) {
+function addToMap (position, city, zone, info, now) {
   var info = new google.maps.InfoWindow({
     map: map, 
     position: position,
@@ -121,13 +141,13 @@ function addToMap(map, position, city, zone, info, now) {
   });
   infos.push(info);
 
-  google.maps.event.addListener(info, 'closeclick', function() {
+  google.maps.event.addListener(info, 'closeclick', function () {
     var gone = this.content.split('(')[0].trim();
     var rest = $.cookie("city").replace(gone, '').replace(';;', ';');
     $.cookie("city", rest, { expires: 730 });
 
-    for(i = 0; i < infos.length; i++) {
-      if(infos[i] == info) { 
+    for (i = 0; i < infos.length; i++) {
+      if (infos[i] == info) { 
         infos.splice(i, 1);
         break;
       }
@@ -135,26 +155,22 @@ function addToMap(map, position, city, zone, info, now) {
   });  
 }
 
-function showTime(map, city, isBeingAdded, callback, info) {
+function showTime (city, isBeingAdded, callback, info) {
   var key = "key=AIzaSyDWtKaxE0vsWdq9lPwCqbuBb3R4S0KyV-U";
   var url = "https://maps.googleapis.com/maps/api/geocode/json?" + 
       key + "&address=" + city;
 
   $.get(url, function (geocode) {
-    if(geocode.results.length == 0) {
+    if (geocode.results.length == 0) {
       var list = $.cookie("city").replace(city, '');
       $.cookie("city", list.replace(';;', ';'), { expires: 730 });
-      if(isBeingAdded) { 
+      if (isBeingAdded) { 
         alert('Sorry, "' + city + '" cannot be found.');
       }
       return;
     }
     
-    var now = new Date();
-    if(hour || hour == 0) {
-      now.setHours(hour, 0, 0, 0);
-    }
-
+    var now = getDateTime();
     var position = geocode.results[0].geometry.location;
     url = "https://maps.googleapis.com/maps/api/timezone/json?" + 
       key + "&location=" + position.lat + "," + position.lng + 
@@ -162,16 +178,16 @@ function showTime(map, city, isBeingAdded, callback, info) {
 
     $.get(url, function (result) {
       var offset = result.rawOffset + result.dstOffset;
-      var zone = (offset > 0 ? '+' : '') + offset / 3600;
-      callback(map, position, city, zone, info, now);
+      var zone = (offset >= 0 ? '+' : '') + offset / 3600;
+      callback(position, city, zone, info, now);
     }); 
   });
 }
 
-function findCity (map) {
+function findCity () {
   var acronyms = ['UK', 'GB', 'US', 'USA', 'PNG', 'UAE', 'NZ'];
   var city = $('#city').val().replace(/\w\S*/g, function(t) {
-    if(acronyms.indexOf(t.toUpperCase()) > -1) {
+    if (acronyms.indexOf(t.toUpperCase()) > -1) {
       return t.toUpperCase();
     }
     else {
@@ -179,21 +195,21 @@ function findCity (map) {
     }
   });
 
-  if(!$.cookie("city") || !$.cookie("city").includes(city)) {
-    showTime(map, city, true, addToMap); 
+  if (!$.cookie("city") || !$.cookie("city").includes(city)) {
+    showTime(city, true, addToMap); 
     var previous = $.cookie("city") ? $.cookie("city") + ";" : "";
     $.cookie("city", previous + city, { expires: 730 });
   }
 }
 
-function resizeWindow() {
+function resizeWindow () {
   $("#map").height(window.innerHeight - 17);
-  if(window.innerHeight < 653) {
-    $(".ui-menu").height(window.innerHeight - 48);
+  if (window.innerHeight < 610) {
+    $(".ui-menu").height(window.innerHeight - 43);
     $(".ui-menu").css("overflow-y", "scroll");
   }
   else {
     $(".ui-menu").css('height', 'auto');
-    $(".ui-menu").css("overflow-y", "auto");    
+    $(".ui-menu").css("overflow-y", "hidden");    
   }
 }
