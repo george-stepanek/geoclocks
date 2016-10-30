@@ -57,7 +57,7 @@ $(document).ready(function () {
   }
 
   // The enter key can be used to submit requests, esc to clear
-  $('#city')/*.focus()*/.keyup(function (e) {
+  $('#city').focus().keyup(function (e) {
     if (e.keyCode == 13) { 
       $('#find').click(); 
     }
