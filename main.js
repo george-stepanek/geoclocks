@@ -29,8 +29,12 @@ $(document).ready(function () {
   $("input, #find, #map, .ui-menu-item").on('click', function () { 
     $("#menu").hide(); 
   });
-  $(".ui-menu-item").on('click', function (e) { 
+  $(".ui-menu-item").on('click', function (e) {
     hour = parseFloat(this.innerHTML.split('>')[1].slice(0, 2));
+    hour = (isNaN(hour) ? undefined : hour);
+    if(hour == undefined) { 
+      $("#date").datepicker("setDate", new Date());
+    }
     refreshTimezones();
   });
   
@@ -38,7 +42,10 @@ $(document).ready(function () {
   $("#date").val($.datepicker.formatDate("dd M ▼", new Date()));
   $("#date").datepicker({ 
     dateFormat: "dd M ▼",
-    onSelect: function () { refreshTimezones(); }
+    onSelect: function () {
+      hour = (hour == undefined ? 0 : hour);
+      refreshTimezones(); 
+    }
   });
 
   // Keep all clocks updated with the current time
@@ -109,7 +116,7 @@ function getDateTime () {
   if (d.getDate() != now.getDate() || d.getMonth() != now.getMonth()) {
     now = d;
   }
-  if (hour || hour == 0) {
+  if (hour != undefined) {
     now.setHours(hour, 0, 0, 0);
   }
   return now;
