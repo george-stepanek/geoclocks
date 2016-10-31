@@ -139,7 +139,7 @@ function refreshTime (now, info) {
 }
 
 function updateMap (position, city, zone, info, now) {
-  info.setContent(city + " (" + zone + ")<br/><b>&nbsp;</b>");
+  info.setContent(city + " (" + zone + ")<br/><b>&nbsp;</b>");
   refreshTime(now, info);
 }
 
