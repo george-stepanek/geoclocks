@@ -32,7 +32,8 @@ $(document).ready(function () {
   $(".ui-menu-item").on('click', function (e) {
     hour = parseFloat(this.innerHTML.split('>')[1].slice(0, 2));
     hour = (isNaN(hour) ? undefined : hour);
-    if(hour == undefined) { 
+    if(hour == undefined) {
+      // Clicking "Now" also sets the date to today
       $("#date").datepicker("setDate", new Date());
     }
     refreshTimezones();
@@ -43,6 +44,7 @@ $(document).ready(function () {
   $("#date").datepicker({ 
     dateFormat: "dd M ▼",
     onSelect: function () {
+      // The time cannot be "Now" if a date has been selected
       hour = (hour == undefined ? 0 : hour);
       refreshTimezones(); 
     }
@@ -63,7 +65,7 @@ $(document).ready(function () {
     }
   }
 
-  // The enter key can be used to submit requests, esc to clear
+  // The Enter key can be used to submit requests, and Esc to clear
   $('#city').focus().keyup(function (e) {
     if (e.keyCode == 13) { 
       $('#find').click(); 
@@ -97,6 +99,7 @@ function clockTick (overlay) {
   var now = getDateTime();
   if (hour == undefined && now.getMinutes() == 0 && 
       now.getSeconds() == 0 && now.getMilliseconds() < 200) {
+    // Check hourly for any daylight savings timezone changes
     refreshTimezones();
   }
   overlay.setDate(now);
@@ -144,7 +147,8 @@ function addToMap (position, city, zone, info, now) {
   var info = new google.maps.InfoWindow({
     map: map, 
     position: position,
-    content: city + " (" + zone + ")<br/><b>&nbsp;</b>"
+    maxWidth: 90,
+    content: city + " (" + zone + ")<br/><b>&nbsp;</b>"
   });
   infos.push(info);
 
