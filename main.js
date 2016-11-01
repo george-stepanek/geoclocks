@@ -1,4 +1,4 @@
-var map, hour, infos = [];
+var map, overlay, hour, infos = [];
 
 $(document).ready(function () {
   // Initialise the map to focus on North America and Western Europe
@@ -10,9 +10,9 @@ $(document).ready(function () {
   });
   
   // Initialise the night shadow overlay
-  var overlay = new DayNightOverlay({ 
+  overlay = new DayNightOverlay({ 
     map: map,
-    fillColor: 'rgba(0, 0, 0, 0.2)',
+    fillColor: 'rgba(0, 0, 0, 0.2)'
   });
   
   // Initialise the menu
@@ -50,10 +50,8 @@ $(document).ready(function () {
     }
   });
 
-  // Keep all clocks updated with the current time
-  setInterval(function () {
-    clockTick(overlay);
-  }, 200);
+  // Keep all of the clocks updated with the current time
+  setInterval(clockTick, 200);
   
   // Load the previously selected locations from the cookie
   if ($.cookie("city")) {
@@ -83,9 +81,7 @@ $(document).ready(function () {
 
   // Keep the map and menu size in sync with the window size
   resizeWindow();
-  $( window ).resize(function() { 
-    resizeWindow(); 
-  });
+  $(window).resize(resizeWindow);
 });
 
 function refreshTimezones () {
@@ -95,7 +91,7 @@ function refreshTimezones () {
   }  
 }
 
-function clockTick (overlay) {
+function clockTick () {
   var now = getDateTime();
   if (hour == undefined && now.getMinutes() == 0 && 
       now.getSeconds() == 0 && now.getMilliseconds() < 200) {
@@ -126,12 +122,11 @@ function getDateTime () {
 }
 
 function refreshTime (now, info) {
-  var content = info.content;
-  var offset = parseFloat(content.split('(')[1].split(')')[0]);
+  var offset = parseFloat(info.content.split('(')[1].split(')')[0]);
   var utc = now.getTime() + (now.getTimezoneOffset() * 60000);
   var local = new Date(utc + offset * 3600000);
 
-  info.setContent(content.split('<b>')[0] + '<b>' + 
+  info.setContent(info.content.split('<b>')[0] + '<b>' + 
                   ("0" + local.getHours()).slice(-2) + ':' +
                   ("0" + local.getMinutes()).slice(-2) + ":" +
                   ("0" + local.getSeconds()).slice(-2) + ' ' +
