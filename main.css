@@ -1,14 +1,17 @@
 @import url('https://fonts.googleapis.com/css?family=Comfortaa');
-#city, #date, #time {
+#city, #date, #time, #find {
   position: absolute;
   z-index: 1;
   top: 12px;
   height: 16px;
-  padding: 1px;
-  background: white;
   color: #444;
   border: 1px solid darkgrey;
+  border-radius: 0;
   font-family: Arial, Helvetica, sans-serif; 
+}
+#city, #date, #time {
+  padding: 1px;
+  background: white;
   font-size: 14px;    
 }
 #city {
@@ -16,14 +19,11 @@
   width: 110px;
 }
 #find {
-  position: absolute;
-  z-index: 1;
-  top: 12px;
   left: 125px;
-  width: 20px;
-  height: 20px;
-  padding: 0px;
-  font-size: 14px;
+  width: 16px;
+  padding: 0px 0 2px 2px;
+  background: #EEE;
+  font-size: 15px;
   cursor: pointer;
 }
 #date, #time {
