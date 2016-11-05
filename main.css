@@ -8,7 +8,7 @@
   border: 1px solid darkgrey;
   border-radius: 0;
   font-family: Arial, Helvetica, sans-serif;
-  box-shadow: 1px 1px 3px -1px rgba(0, 0, 0, 0.5);
+  box-shadow: 0px 1px 3px -1px rgba(0, 0, 0, 0.5);
 }
 #city, #date, #time {
   padding: 1px;
