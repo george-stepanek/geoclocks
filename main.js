@@ -139,10 +139,14 @@ function updateMap (position, city, zone, info, now) {
 }
 
 function addToMap (position, city, zone, info, now) {
+  var maxLength = city.split(' ').sort(function(a, b) { 
+    return b.length - a.length;
+  })[0].length;
+  
   var info = new google.maps.InfoWindow({
     map: map, 
     position: position,
-    maxWidth: 90,
+    maxWidth: maxLength > 9 ? null : 90,
     content: city + " (" + zone + ")<br/><b>&nbsp;</b>"
   });
   infos.push(info);
