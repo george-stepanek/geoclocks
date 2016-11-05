@@ -2,27 +2,28 @@
 #city, #date, #time, #find {
   position: absolute;
   z-index: 1;
-  top: 12px;
   height: 16px;
+  top: 12px;
   color: #444;
-  border: 1px solid darkgrey;
   border-radius: 0;
   font-family: Arial, Helvetica, sans-serif;
-  box-shadow: 0px 1px 3px -1px rgba(0, 0, 0, 0.5);
+  box-shadow: 0px 1px 6px -1px rgba(0, 0, 0, 0.5);
 }
 #city, #date, #time {
   padding: 1px;
   background: white;
   font-size: 14px;    
+  border: 1px solid white;
 }
 #city {
   left: 12px;
   width: 110px;
+  outline: none;
 }
 #find {
   left: 125px;
   width: 16px;
-  padding: 0px 0 2px 2px;
+  padding: 2px;
   background: #EEE;
   font-size: 15px;
   cursor: pointer;
