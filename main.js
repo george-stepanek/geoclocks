@@ -77,6 +77,7 @@ $(document).ready(function () {
   $('#find').on('click', function () {
     findCity();    
     $('#city').val('');
+    $(this).effect("highlight", {color: '#BBB'}, 600);
   }); 
 
   // Keep the map and menu size in sync with the window size
