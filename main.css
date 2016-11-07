@@ -77,3 +77,10 @@ _:-ms-lang(x), #title { /* IE & Edge */
   cursor: default;
   -ms-user-select: none;
 }
+/* Placeholder color consistency */
+::-webkit-input-placeholder  {
+  color: #AAA;
+}
+:-ms-input-placeholder  {
+  color: #AAA !important;
+}
