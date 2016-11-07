@@ -32,7 +32,7 @@ $(document).ready(function () {
   $(".ui-menu-item").on('click', function (e) {
     hour = parseFloat(this.innerHTML.split('>')[1].slice(0, 2));
     hour = (isNaN(hour) ? undefined : hour);
-    if(hour == undefined) {
+    if(hour === undefined) {
       // Clicking "Now" also sets the date to today
       $("#date").datepicker("setDate", new Date());
     }
@@ -45,7 +45,7 @@ $(document).ready(function () {
     dateFormat: "dd M ▼",
     onSelect: function () {
       // The time cannot be "Now" if a date has been selected
-      hour = (hour == undefined ? 0 : hour);
+      hour = (hour === undefined ? 0 : hour);
       refreshTimezones(); 
     }
   });
@@ -94,7 +94,7 @@ function refreshTimezones () {
 
 function clockTick () {
   var now = getDateTime();
-  if (hour == undefined && now.getMinutes() == 0 && 
+  if (hour === undefined && now.getMinutes() == 0 && 
       now.getSeconds() == 0 && now.getMilliseconds() < 200) {
     // Check hourly for any daylight savings timezone changes
     refreshTimezones();
@@ -116,7 +116,7 @@ function getDateTime () {
   if (d.getDate() != now.getDate() || d.getMonth() != now.getMonth()) {
     now = d;
   }
-  if (hour != undefined) {
+  if (hour !== undefined) {
     now.setHours(hour, 0, 0, 0);
   }
   return now;
@@ -144,21 +144,21 @@ function addToMap (position, city, zone, info, now) {
     return b.length - a.length;
   })[0].length;
   
-  var info = new google.maps.InfoWindow({
+  var newInfo = new google.maps.InfoWindow({
     map: map, 
     position: position,
     maxWidth: maxLength > 9 ? null : 90,
     content: city + " (" + zone + ")<br/><b>&nbsp;</b>"
   });
-  infos.push(info);
+  infos.push(newInfo);
 
-  google.maps.event.addListener(info, 'closeclick', function () {
+  google.maps.event.addListener(newInfo, 'closeclick', function () {
     var gone = this.content.split('(')[0].trim();
     var rest = $.cookie("city").replace(gone, '').replace(';;', ';');
     $.cookie("city", rest, { expires: 730 });
 
     for (i = 0; i < infos.length; i++) {
-      if (infos[i] == info) { 
+      if (infos[i] == this) { 
         infos.splice(i, 1);
         break;
       }
