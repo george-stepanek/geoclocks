@@ -214,9 +214,9 @@ function findCity () {
 }
 
 function resizeWindow () {
-  $("#map").height(window.innerHeight - 17);
-  if (window.innerHeight < 610) {
-    $(".ui-menu").height(window.innerHeight - 43);
+  $("#map").height(window.innerHeight);
+  if (window.innerHeight < 605) {
+    $(".ui-menu").height(window.innerHeight - 36);
     $(".ui-menu").css("overflow-y", "scroll");
   }
   else {
