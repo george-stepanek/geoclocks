@@ -215,8 +215,8 @@ function findCity () {
 
 function resizeWindow () {
   $("#map").height(window.innerHeight);
-  if (window.innerHeight < 605) {
-    $(".ui-menu").height(window.innerHeight - 36);
+  if (window.innerHeight < 601) {
+    $(".ui-menu").height(window.innerHeight - 32);
     $(".ui-menu").css("overflow-y", "scroll");
   }
   else {
