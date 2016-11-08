@@ -1,4 +1,7 @@
 @import url('https://fonts.googleapis.com/css?family=Comfortaa');
+body {
+  overflow: hidden;
+}
 #city, #date, #time, #find {
   position: absolute;
   z-index: 1;
@@ -41,7 +44,7 @@
   user-select: none;
 }
 #date {
-  right: 95px;
+  right: 97px;
   width: 66px;
 }
 .ui-corner-all {
@@ -64,6 +67,7 @@
 #map {
   height: 600px;
   mix-blend-mode: darken;
+  margin: -8px;
 }
 #title {
   position: fixed;
