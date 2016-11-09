@@ -3,21 +3,27 @@ body {
   margin: 0;
   overflow: hidden;
 }
-#city, #date, #time, #find {
+::-webkit-input-placeholder {
+  color: #AAA;
+}
+:-ms-input-placeholder {
+  color: #AAA !important;
+}
+#city, #date, #time, #find, .ui-menu {
   position: absolute;
   z-index: 1;
-  height: 16px;
-  top: 8px;
   color: #444;
-  border-radius: 0;
   font-family: Arial, Helvetica, sans-serif;
+  border-style: none !important;
   box-shadow: 0px 1px 6px -1px rgba(0, 0, 0, 0.5);
 }
 #city, #date, #time {
-  padding: 1px;
+  height: 16px;
+  top: 8px;
+  padding: 2px;
   background: white;
   font-size: 14px;    
-  border: 1px solid white;
+  line-height: 15px;
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
@@ -28,7 +34,9 @@ body {
   outline: none;
 }
 #find {
+  top: 8px;
   left: 121px;
+  height: 16px;
   width: 16px;
   padding: 2px;
   background: #EEE;
@@ -48,20 +56,21 @@ body {
   right: 93px;
   width: 66px;
 }
-.ui-corner-all {
+.ui-datepicker {
+  margin-top: 1px;
+  border-style: none !important;
   border-radius: 0;
+  box-shadow: 0px 1px 6px -1px rgba(0, 0, 0, 0.5);
+  transform: translate(-8px, 0);
 }
 #time {
   right: 8px;
-  width: 76px;
+  width: 75px;
 }
 .ui-menu {
-  position: absolute;
-  z-index: 1;
-  width: 60px;
-  top: 28px;
+  width: 61px;
+  top: 29px;
   right: 26px;
-  font-family: Arial, Helvetica, sans-serif; 
   font-size: 14px;
   overflow-x: hidden;
 }
@@ -85,10 +94,4 @@ _:-ms-lang(x), #title { /* IE & Edge */
   z-index: 1 !important;
   cursor: default;
   -ms-user-select: none;
-}
-::-webkit-input-placeholder { /* For consistency */
-  color: #AAA;
-}
-:-ms-input-placeholder {
-  color: #AAA !important;
 }
