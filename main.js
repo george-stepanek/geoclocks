@@ -26,7 +26,7 @@ $(document).ready(function () {
   $("#time").on('click', function () { 
     $("#menu").show(); 
   });
-  $("input, #find, #map, .ui-menu-item").on('click', function () { 
+  $("#city, #find, #date, #map, .ui-menu").on('click', function () { 
     $("#menu").hide(); 
   });
   $(".ui-menu-item").on('click', function (e) {
@@ -101,9 +101,9 @@ function clockTick () {
   }
   overlay.setDate(now);
 
-  $('#time').text(("0" + now.getHours()).slice(-2) + ':' +
-                  ("0" + now.getMinutes()).slice(-2) + ":" +
-                  ("0" + now.getSeconds()).slice(-2) + " ▼");
+  $('#time').val(("0" + now.getHours()).slice(-2) + ':' +
+                 ("0" + now.getMinutes()).slice(-2) + ":" +
+                 ("0" + now.getSeconds()).slice(-2) + " ▼");
 
   for (i = 0; i < infos.length; i++) {
     refreshTime(now, infos[i]);
