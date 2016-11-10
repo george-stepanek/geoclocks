@@ -74,6 +74,15 @@ body {
   font-size: 14px;
   overflow-x: hidden;
 }
+.ui-menu > li > div {
+  border-style: none !important;
+  margin: 0 !important;
+  background-color: white !important;
+  color: #444 !important;
+}
+.ui-menu > li > div:hover {
+  background-color: #EEE !important;
+}
 #map {
   height: 600px;
   mix-blend-mode: darken;
