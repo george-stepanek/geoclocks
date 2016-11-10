@@ -83,6 +83,15 @@ body {
 .ui-menu > li > div:hover {
   background-color: #EEE !important;
 }
+.ui-widget-content .ui-state-active {
+  border-color: #777;
+  background-color: #999;
+}
+.ui-widget-content .ui-state-highlight {
+  border-color: #BBB;
+  background-color: #DDD;
+  color: #454545;
+}
 #map {
   height: 600px;
   mix-blend-mode: darken;
