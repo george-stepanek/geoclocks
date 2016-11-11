@@ -97,6 +97,13 @@ body {
   height: 600px;
   mix-blend-mode: darken;
 }
+.gm-style-iw {
+  z-index: -1;
+  top: 14px !important;
+  padding: 5px 0 2px 7px;
+  background-color: white;
+  box-shadow: 0px 1px 6px -1px rgba(0, 0, 0, 0.5);
+}
 #title {
   position: fixed;
   bottom: 4px;
