@@ -9,6 +9,12 @@ $(document).ready(function () {
     streetViewControl: false 
   });
   
+  // Square corners of the zoom control
+  google.maps.event.addListenerOnce(map, 'tilesloaded', function(){
+    var zoom = $('.gm-bundled-control > div:nth-child(1) > div');
+    zoom.css({'border-radius' : 0});
+  });
+  
   // Initialise the night shadow overlay
   overlay = new DayNightOverlay({ 
     map: map,
@@ -151,6 +157,11 @@ function addToMap (position, city, zone, info, now) {
     content: city + " (" + zone + ")<br/><b>&nbsp;</b>"
   });
   infos.push(newInfo);
+
+  google.maps.event.addListener(newInfo, 'domready', function() {
+    var box = $('.gm-style-iw').prev().children(':nth-child(4)');
+    box.css({'border-radius' : 0});
+  });
 
   google.maps.event.addListener(newInfo, 'closeclick', function () {
     var gone = this.content.split('(')[0].trim();
