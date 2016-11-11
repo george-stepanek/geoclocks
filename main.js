@@ -158,11 +158,15 @@ function addToMap (position, city, zone, info, now) {
   });
   infos.push(newInfo);
   
+  // Remove excess whitespace by hiding extraneous elements
   google.maps.event.addListener(newInfo, 'domready', function() {
     var outer = $('.gm-style-iw');
+    outer.parent().css({'visibility': 'hidden'});
+    outer.parent().children().css({'visibility': 'visible'});
+
     var box = outer.prev().children(':nth-child(2), :nth-child(4)');
-    box.css({'display' : 'none'});
-    outer.next().css({'top': '18px'}); // close button
+    box.css({'display': 'none'});
+    outer.next().css({'top': '18px'}); // realign close button
   });
 
   google.maps.event.addListener(newInfo, 'closeclick', function () {
