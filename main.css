@@ -31,6 +31,7 @@ body {
 #city {
   left: 8px;
   width: 110px;
+  padding-left: 4px;
   outline: none;
 }
 #find {
