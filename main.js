@@ -146,7 +146,7 @@ function updateMap (position, city, zone, info, now) {
 }
 
 function addToMap (position, city, zone, info, now) {
-  var maxLength = city.split(' ').sort(function(a, b) { 
+  var maxLength = city.match(/[a-z]+/gi).sort(function(a, b) { 
     return b.length - a.length;
   })[0].length;
   
