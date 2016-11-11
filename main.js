@@ -8,7 +8,7 @@ $(document).ready(function () {
     mapTypeControl: false,
     streetViewControl: false 
   });
-  
+
   // Square corners of the zoom control
   google.maps.event.addListenerOnce(map, 'tilesloaded', function(){
     var zoom = $('.gm-bundled-control > div:nth-child(1) > div');
@@ -157,10 +157,12 @@ function addToMap (position, city, zone, info, now) {
     content: city + " (" + zone + ")<br/><b>&nbsp;</b>"
   });
   infos.push(newInfo);
-
+  
   google.maps.event.addListener(newInfo, 'domready', function() {
-    var box = $('.gm-style-iw').prev().children(':nth-child(4)');
-    box.css({'border-radius' : 0});
+    var outer = $('.gm-style-iw');
+    var box = outer.prev().children(':nth-child(2), :nth-child(4)');
+    box.css({'display' : 'none'});
+    outer.next().css({'top': '18px'}); // close button
   });
 
   google.maps.event.addListener(newInfo, 'closeclick', function () {
