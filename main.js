@@ -153,7 +153,7 @@ function addToMap (position, city, zone, info, now) {
   var newInfo = new google.maps.InfoWindow({
     map: map, 
     position: position,
-    maxWidth: maxLength > 9 ? null : 90,
+    maxWidth: maxLength > 9 ? null : 95,
     content: city + " (" + zone + ")<br/><b>&nbsp;</b>"
   });
   infos.push(newInfo);
