@@ -159,7 +159,7 @@ function addToMap (position, city, zone, info, now) {
   infos.push(newInfo);
   
   // Remove excess whitespace by hiding extraneous elements
-  google.maps.event.addListener(newInfo, 'domready', function() {
+  google.maps.event.addListenerOnce(newInfo, 'domready', function() {
     var outer = $('.gm-style-iw');
     outer.parent().css({'visibility': 'hidden'});
     outer.parent().children().css({'visibility': 'visible'});
