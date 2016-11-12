@@ -21,7 +21,7 @@ body {
 #city, #date, #time {
   height: 16px;
   top: 8px;
-  padding: 2px;
+  padding: 4px;
   background: white;
   font-size: 14px;    
   line-height: 15px;
@@ -32,7 +32,7 @@ body {
 #city {
   left: 8px;
   width: 110px;
-  padding-left: 4px;
+  padding-left: 6px;
   outline: none;
 }
 #find {
@@ -40,7 +40,7 @@ body {
   left: 121px;
   height: 16px;
   width: 16px;
-  padding: 2px;
+  padding: 4px;
   background: #EEE;
   font-size: 15px;
   line-height: 16px;
@@ -55,7 +55,7 @@ body {
   user-select: none;
 }
 #date {
-  right: 93px;
+  right: 99px;
   width: 66px;
 }
 .ui-datepicker {
@@ -79,9 +79,10 @@ body {
   width: 75px;
 }
 .ui-menu {
-  width: 61px;
-  top: 29px;
-  right: 26px;
+  width: 62px;
+  top: 33px;
+  right: 28px;
+  padding-left: 1px;
   font-size: 14px;
   overflow-x: hidden;
 }
