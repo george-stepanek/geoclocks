@@ -8,8 +8,11 @@ $(document).ready(function () {
     mapTypeControl: false,
     streetViewControl: false 
   });
+  $("#map").on('click', function () { 
+    $("#city").blur(); 
+  });
 
-  // Square corners of the zoom control
+  // Square the corners of the zoom control
   google.maps.event.addListenerOnce(map, 'tilesloaded', function(){
     var zoom = $('.gm-bundled-control > div:nth-child(1) > div');
     zoom.css({'border-radius' : 0});
@@ -45,7 +48,7 @@ $(document).ready(function () {
     refreshTimezones();
   });
   
-  // Initialise the date picker
+  // The #datepicker is an invisible overlay over the #date display
   $("#datepicker").datepicker({ 
     altField: "#date",
     altFormat: "dd M ▼",
@@ -73,7 +76,7 @@ $(document).ready(function () {
   // The Enter key can be used to submit requests, and Esc to clear
   $('#city').focus().keyup(function (e) {
     if (e.keyCode == 13) { 
-      $('#find').click(); 
+      $('#find').click();
     }
     if (e.keyCode == 27) { 
       $('#city').val(''); 
@@ -83,7 +86,7 @@ $(document).ready(function () {
   // Search button handler
   $('#find').on('click', function () {
     findCity();    
-    $('#city').val('');
+    $('#city').val('').focus();
     $(this).effect("highlight", {color: '#BBB'}, 600);
   }); 
 
