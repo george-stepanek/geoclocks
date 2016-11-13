@@ -9,7 +9,7 @@ body {
 :-ms-input-placeholder {
   color: #AAA !important;
 }
-#city, #date, #time, #find, .ui-menu {
+#city, #datepicker, #date, #time, #find, .ui-menu {
   position: absolute;
   z-index: 1;
   color: #444;
@@ -18,7 +18,7 @@ body {
   border-radius: 0;
   box-shadow: 0px 1px 6px -1px rgba(0, 0, 0, 0.5);
 }
-#city, #date, #time {
+#city, #datepicker, #date, #time {
   height: 16px;
   top: 8px;
   padding: 4px;
@@ -46,7 +46,7 @@ body {
   line-height: 16px;
   cursor: pointer;
 }
-#date, #time {
+#datepicker, #date, #time {
   cursor: pointer;
   text-align: right;
   -webkit-user-select: none;
@@ -54,9 +54,13 @@ body {
   -ms-user-select: none;
   user-select: none;
 }
-#date {
+#datepicker, #date {
   right: 95px;
   width: 66px;
+}
+#datepicker {
+  z-index: 2;
+  opacity: 0;
 }
 .ui-datepicker {
   margin-top: 1px;
