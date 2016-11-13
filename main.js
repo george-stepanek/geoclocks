@@ -121,7 +121,7 @@ function getDateTime () {
   var theDate = new Date();
   var dateSet = $("#datepicker").datepicker("getDate");
   if (dateSet.setHours(0,0,0,0) != new Date().setHours(0,0,0,0)) {
-    theDate = $("#datepicker").datepicker("getDate");
+    theDate = dateSet;
   }
   if (hour !== undefined) {
     theDate.setHours(hour, 0, 0, 0);
