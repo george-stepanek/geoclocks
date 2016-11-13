@@ -134,13 +134,12 @@ function getDateTime () {
 
 function refreshTime (now, info) {
   var offset = parseFloat(info.content.split('(')[1].split(')')[0]);
-  var utc = now.getTime() + (now.getTimezoneOffset() * 60000);
-  var local = new Date(utc + offset * 3600000);
-
+  var local = moment(now);
+  local.utcOffset(offset * 60);  
   info.setContent(info.content.split('<b>')[0] + '<b>' + 
-                  ("0" + local.getHours()).slice(-2) + ':' +
-                  ("0" + local.getMinutes()).slice(-2) + ":" +
-                  ("0" + local.getSeconds()).slice(-2) + ' ' +
+                  ("0" + local.hours()).slice(-2) + ':' +
+                  ("0" + local.minutes()).slice(-2) + ":" +
+                  ("0" + local.seconds()).slice(-2) + ' ' +
                   local.toString().slice(0, 3) + '</b>'); 
 }
 
