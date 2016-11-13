@@ -32,7 +32,7 @@ $(document).ready(function () {
   $("#time").on('click', function () { 
     $("#menu").show(); 
   });
-  $("#city, #find, #date, #map, .ui-menu").on('click', function () { 
+  $("input:not(#time), div, .ui-menu").on('click', function () { 
     $("#menu").hide(); 
   });
   $(".ui-menu-item").on('click', function (e) {
@@ -40,21 +40,22 @@ $(document).ready(function () {
     hour = (isNaN(hour) ? undefined : hour);
     if(hour === undefined) {
       // Clicking "Now" also sets the date to today
-      $("#date").datepicker("setDate", new Date());
+      $("#datepicker").datepicker("setDate", new Date());
     }
     refreshTimezones();
   });
   
   // Initialise the date picker
-  $("#date").val($.datepicker.formatDate("dd M ▼", new Date()));
-  $("#date").datepicker({ 
-    dateFormat: "dd M ▼",
+  $("#datepicker").datepicker({ 
+    altField: "#date",
+    altFormat: "dd M ▼",
     onSelect: function () {
       // The time cannot be "Now" if a date has been selected
       hour = (hour === undefined ? 0 : hour);
       refreshTimezones(); 
     }
   });
+  $("#datepicker").datepicker("setDate", new Date());
 
   // Keep all of the clocks updated with the current time
   setInterval(clockTick, 200);
@@ -117,15 +118,15 @@ function clockTick () {
 }
 
 function getDateTime () {
-  var now = new Date();
-  var d = new Date($('#date').val().slice(0, 7) + now.getFullYear());
-  if (d.getDate() != now.getDate() || d.getMonth() != now.getMonth()) {
-    now = d;
+  var theDate = new Date();
+  var dateSet = $("#datepicker").datepicker("getDate");
+  if (dateSet.setHours(0,0,0,0) != new Date().setHours(0,0,0,0)) {
+    theDate = $("#datepicker").datepicker("getDate");
   }
   if (hour !== undefined) {
-    now.setHours(hour, 0, 0, 0);
+    theDate.setHours(hour, 0, 0, 0);
   }
-  return now;
+  return theDate;
 }
 
 function refreshTime (now, info) {
@@ -163,7 +164,7 @@ function addToMap (position, city, zone, info, now) {
     var outer = $('.gm-style-iw');
     outer.parent().css({'visibility': 'hidden'});
     outer.parent().children().css({'visibility': 'visible'});
-
+ 
     var box = outer.prev().children(':nth-child(2), :nth-child(4)');
     box.css({'display': 'none'});
     outer.next().css({'top': '18px'}); // realign close button
