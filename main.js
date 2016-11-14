@@ -13,7 +13,7 @@ $(document).ready(function () {
   });
 
   // Square the corners of the zoom control
-  google.maps.event.addListenerOnce(map, 'tilesloaded', function(){
+  google.maps.event.addListenerOnce(map, 'tilesloaded', function () {
     var zoom = $('.gm-bundled-control > div:nth-child(1) > div');
     zoom.css({'border-radius' : 0});
   });
@@ -149,7 +149,7 @@ function updateMap (position, city, zone, info, now) {
 }
 
 function addToMap (position, city, zone, info, now) {
-  var maxLength = city.match(/[a-z]+/gi).sort(function(a, b) { 
+  var maxLength = city.match(/[a-z]+/gi).sort(function (a, b) { 
     return b.length - a.length;
   })[0].length;
   
@@ -162,7 +162,7 @@ function addToMap (position, city, zone, info, now) {
   infos.push(newInfo);
   
   // Remove excess whitespace by hiding extraneous elements
-  google.maps.event.addListenerOnce(newInfo, 'domready', function() {
+  google.maps.event.addListenerOnce(newInfo, 'domready', function () {
     var outer = $('.gm-style-iw');
     outer.parent().css({'visibility': 'hidden'});
     outer.parent().children().css({'visibility': 'visible'});
@@ -217,7 +217,8 @@ function showTime (city, isBeingAdded, callback, info) {
 
 function findCity () {
   var acronyms = ['UK', 'GB', 'US', 'USA', 'PNG', 'UAE', 'NZ'];
-  var city = $('#city').val().replace(/\w\S*/g, function(t) {
+  var city = $('#city').val().replace(";", ","); 
+  city = city.replace(/\w\S*/g, function (t) {
     if (acronyms.indexOf(t.toUpperCase()) > -1) {
       return t.toUpperCase();
     }
