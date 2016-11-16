@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Comfortaa');
+@import url('https://fonts.googleapis.com/css?family=Quicksand');
 body {
   margin: 0;
   overflow: hidden;
@@ -116,8 +116,9 @@ body {
   color: black;
   text-align: center;
   z-index: -1;
-  font-family: Comfortaa, sans-serif;
+  font-family: Quicksand, sans-serif;
   font-size: 50px;
+  letter-spacing: -6px;
   left: 50%;
   transform: translate(-50%, 0);
   opacity: 0.4;
