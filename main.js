@@ -1,10 +1,12 @@
 var map, overlay, hour, infos = [];
 
 $(document).ready(function () {
+  var ctr = $.cookie("center") ? JSON.parse($.cookie("center")) : null;
+  
   // Initialise the map to focus on North America and Western Europe
   map = new google.maps.Map($('#map')[0], { 
-    zoom: 2, 
-    center: {lat: 30, lng: -45}, 
+    zoom: $.cookie("zoom") ? parseInt($.cookie("zoom")) : 2, 
+    center: ctr ? ctr : {lat: 30, lng: -45}, 
     mapTypeControl: false,
     streetViewControl: false 
   });
@@ -16,6 +18,15 @@ $(document).ready(function () {
   google.maps.event.addListenerOnce(map, 'tilesloaded', function () {
     var zoom = $('.gm-bundled-control > div:nth-child(1) > div');
     zoom.css({'border-radius' : 0});
+  });
+  
+  // Keep saving the current position and zoom for next time
+  google.maps.event.addListener(map, 'center_changed', function () {
+    var center = JSON.stringify(map.getCenter().toJSON());
+    $.cookie("center", center, { expires: 730 });
+  });  
+  google.maps.event.addListener(map, 'zoom_changed', function () {
+    $.cookie("zoom", map.getZoom(), { expires: 730 });
   });
   
   // Initialise the night shadow overlay
