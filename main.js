@@ -143,22 +143,23 @@ function refreshTime (now, info) {
                   local.toString().slice(0, 3) + '</b>'); 
 }
 
-function updateMap (position, city, zone, info, now) {
+function updateMap (position, city, zone, info, now, isBeingAdded) {
   info.setContent(city + " (" + zone + ")<br/><b>&nbsp;</b>");
   refreshTime(now, info);
 }
 
-function addToMap (position, city, zone, info, now) {
+function addToMap (position, city, zone, info, now, isBeingAdded) {
   var maxLength = city.match(/[a-z]+/gi).sort(function (a, b) { 
     return b.length - a.length;
   })[0].length;
   
   var newInfo = new google.maps.InfoWindow({
-    map: map, 
     position: position,
+    disableAutoPan: !isBeingAdded,
     maxWidth: maxLength > 9 ? null : 95,
     content: city + " (" + zone + ")<br/><b>&nbsp;</b>"
   });
+  newInfo.open(map);
   infos.push(newInfo);
   
   // Remove excess whitespace by hiding extraneous elements
@@ -210,7 +211,7 @@ function showTime (city, isBeingAdded, callback, info) {
     $.get(url, function (result) {
       var offset = result.rawOffset + result.dstOffset;
       var zone = (offset >= 0 ? '+' : '') + offset / 3600;
-      callback(position, city, zone, info, now);
+      callback(position, city, zone, info, now, isBeingAdded);
     }); 
   });
 }
