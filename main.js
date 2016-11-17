@@ -6,7 +6,8 @@ $(document).ready(function () {
   // Initialise the map to focus on North America and Western Europe
   map = new google.maps.Map($('#map')[0], { 
     zoom: $.cookie("zoom") ? parseInt($.cookie("zoom")) : 2, 
-    center: ctr ? ctr : {lat: 30, lng: -45}, 
+    center: ctr ? ctr : {lat: 30, lng: -45},
+    fullscreenControl: false,
     mapTypeControl: false,
     streetViewControl: false 
   });
