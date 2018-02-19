@@ -200,7 +200,7 @@ function addToMap (position, city, zone, info, now, isBeingAdded) {
 }
 
 function showTime (city, isBeingAdded, callback, info) {
-  var key = "key=AIzaSyDWtKaxE0vsWdq9lPwCqbuBb3R4S0KyV-U";
+  var key = "key=AIzaSyClqIIvyXSnwe0zS0XgUVcHrDCkkkTu3dg";
   var url = "https://maps.googleapis.com/maps/api/geocode/json?" + 
       key + "&address=" + city;
 
