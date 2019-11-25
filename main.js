@@ -168,7 +168,7 @@ function addToMap (position, city, zone, info, now, isBeingAdded) {
   var newInfo = new google.maps.InfoWindow({
     position: position,
     disableAutoPan: !isBeingAdded,
-    maxWidth: maxLength > 9 ? null : 95,
+    maxWidth: null,
     content: city + " (" + zone + ")<br/><b>&nbsp;</b>"
   });
   newInfo.open(map);
