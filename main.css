@@ -123,3 +123,8 @@ _:-ms-lang(x), #title { /* IE & Edge */
   cursor: default;
   -ms-user-select: none;
 }
+.gm-style-iw {
+  border-radius: 0 !important;
+  padding: 4px !important;
+  height: 38px;
+}
