@@ -126,5 +126,9 @@ _:-ms-lang(x), #title { /* IE & Edge */
 .gm-style-iw {
   border-radius: 0 !important;
   padding: 4px !important;
-  height: 48px;
+  height: 56px;
+  width: 140px;
+}
+.gm-style-iw-d {
+  margin-top: -40px;
 }
