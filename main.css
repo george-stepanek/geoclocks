@@ -132,3 +132,6 @@ _:-ms-lang(x), #title { /* IE & Edge */
 .gm-style-iw-d {
   margin-top: -40px;
 }
+.gm-style .gm-style-iw-tc {
+  top: 0 !important;
+}
